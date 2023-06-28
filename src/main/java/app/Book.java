@@ -49,4 +49,14 @@ public class Book extends Product{
     public LocalDateTime getDateAdded() {
         return dateAdded;
     }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "price=" + price +
+                ", id=" + id +
+                ", discountAvailable=" + discountAvailable +
+                ", dateAdded=" + dateAdded +
+                '}';
+    }
 }

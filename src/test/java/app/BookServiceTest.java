@@ -3,9 +3,11 @@ package app;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -105,5 +107,42 @@ class BookServiceTest {
         Assertions.assertEquals(products.get(4), lastThreeAddedProducts.get(0));
         Assertions.assertEquals(products.get(3), lastThreeAddedProducts.get(1));
         Assertions.assertEquals(products.get(2), lastThreeAddedProducts.get(2));
+    }
+
+    @Test
+    void calculateTotalCost() {
+        List<Book> products = Arrays.asList(
+                new Book("Book", 50, true, LocalDateTime.of(2023, 5, 1, 10, 0)),
+                new Book("Book", 100, true, LocalDateTime.of(2023, 7, 15, 14, 30)),
+                new Book("Toy", 60, true, LocalDateTime.of(2023, 4, 20, 9, 15)),
+                new Book("Book", 80, true, LocalDateTime.of(2022, 12, 10, 17, 45)),
+                new Book("Book", 70, true, LocalDateTime.of(2023, 9, 5, 11, 20))
+        );
+
+        double totalCost = BookService.calculateTotalCost(products);
+
+        Assertions.assertEquals(120, totalCost);
+    }
+
+
+    @Test
+    void groupProductsByType() {
+        List<Book> products = Arrays.asList(
+                new Book("Book", 100, 1, true, LocalDateTime.of(2022, 1, 1, 0, 0)),
+                new Book("Book", 200, 2, false, LocalDateTime.of(2022, 2, 1, 0, 0)),
+                new Book("Toy", 150, 3, true, LocalDateTime.of(2022, 1, 15, 0, 0)),
+                new Book("Toy", 120, 4, false, LocalDateTime.of(2022, 2, 15, 0, 0)),
+                new Book("Book", 180, 5, true, LocalDateTime.of(2022, 1, 20, 0, 0))
+        );
+
+        Map<String, List<Product>> groupedProducts = BookService.groupProductsByType(products);
+
+        Assertions.assertEquals(2, groupedProducts.size());
+
+        List<Product> bookProducts = groupedProducts.get("Book");
+        Assertions.assertEquals(3, bookProducts.size());
+
+        List<Product> toyProducts = groupedProducts.get("Toy");
+        Assertions.assertEquals(2, toyProducts.size());
     }
 }

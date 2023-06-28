@@ -1,9 +1,9 @@
 package app;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BookService {
@@ -46,5 +46,22 @@ public class BookService {
                 .sorted(Comparator.comparing(Book::getDateAdded).reversed())
                 .limit(3)
                 .collect(Collectors.toList());
+    }
+
+    public static double calculateTotalCost(List<Book> products) {
+        LocalDateTime currentYear = LocalDateTime.of(LocalDateTime.now().getYear(), Month.JANUARY, 1, 0, 0);
+
+        double totalCost = products.stream()
+                .filter(p -> p.getDateAdded().isAfter(currentYear))
+                .filter(p -> p.getType().equals("Book"))
+                .filter(p -> p.getPrice() <= 75)
+                .mapToDouble(Book::getPrice)
+                .sum();
+        return totalCost;
+    }
+
+    public static Map<String, List<Product>> groupProductsByType(List<Book> products) {
+        return products.stream()
+                .collect(Collectors.groupingBy(Product::getType));
     }
 }
